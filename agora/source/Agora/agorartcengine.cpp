@@ -1,6 +1,6 @@
 #include "agorartcengine.hpp"
 #include "Agora/AgoraBase.h"
-#include "obs.h"
+//#include "obs.h"
 using namespace agora::rtc;
 using namespace agora;
 
@@ -17,58 +17,58 @@ public:
     }
     virtual void onJoinChannelSuccess(const char* channel, uid_t uid, int elapsed) override
     {
-		struct calldata params;
-		calldata_init(&params);
-		calldata_set_string(&params, "channel", channel);
-		calldata_set_int(&params, "uid", uid);
-		calldata_set_int(&params, "elapsed", elapsed);
-		signal_handler_signal(obs_service_get_signal_handler(m_engine.agoraService), "joinChannelSuccess", &params);
+//		struct calldata params;
+//		calldata_init(&params);
+//		calldata_set_string(&params, "channel", channel);
+//		calldata_set_int(&params, "uid", uid);
+//		calldata_set_int(&params, "elapsed", elapsed);
+//		signal_handler_signal(obs_service_get_signal_handler(m_engine.agoraService), "joinChannelSuccess", &params);
     }
 
 	virtual void onLeaveChannel(const RtcStats& stats) override
 	{
-		struct calldata params;
-		uint8_t stack[256] = { 0 };
-		calldata_init_fixed(&params, stack, 256);
+//		struct calldata params;
+//		uint8_t stack[256] = { 0 };
+//		calldata_init_fixed(&params, stack, 256);
 
-		calldata_set_int(&params, "duration", stats.duration);
-		calldata_set_int(&params, "txBytes", stats.txBytes);
-		calldata_set_int(&params, "rxBytes", stats.rxBytes);
-		calldata_set_int(&params, "txKBitRate", stats.txKBitRate);
-		calldata_set_int(&params, "rxKBitRate", stats.rxKBitRate);
-		calldata_set_int(&params, "cpuAppUsage", stats.cpuAppUsage);
-		calldata_set_int(&params, "cpuTotalUsage", stats.cpuTotalUsage);
-		calldata_set_int(&params, "rxAudioKBitRate", stats.rxAudioKBitRate);
-		calldata_set_int(&params, "txAudioKBitRate", stats.txAudioKBitRate);
-		calldata_set_int(&params, "rxVideoKBitRate", stats.rxVideoKBitRate);
-		calldata_set_int(&params, "txVideoKBitRate", stats.txVideoKBitRate);
-		calldata_set_int(&params, "userCount", stats.userCount);
+//		calldata_set_int(&params, "duration", stats.duration);
+//		calldata_set_int(&params, "txBytes", stats.txBytes);
+//		calldata_set_int(&params, "rxBytes", stats.rxBytes);
+//		calldata_set_int(&params, "txKBitRate", stats.txKBitRate);
+//		calldata_set_int(&params, "rxKBitRate", stats.rxKBitRate);
+//		calldata_set_int(&params, "cpuAppUsage", stats.cpuAppUsage);
+//		calldata_set_int(&params, "cpuTotalUsage", stats.cpuTotalUsage);
+//		calldata_set_int(&params, "rxAudioKBitRate", stats.rxAudioKBitRate);
+//		calldata_set_int(&params, "txAudioKBitRate", stats.txAudioKBitRate);
+//		calldata_set_int(&params, "rxVideoKBitRate", stats.rxVideoKBitRate);
+//		calldata_set_int(&params, "txVideoKBitRate", stats.txVideoKBitRate);
+//		calldata_set_int(&params, "userCount", stats.userCount);
 	}
 
 	virtual void onError(int err, const char* msg) override
 	{
-		struct calldata params;
-		calldata_init(&params);
-		calldata_set_int(&params, "err_code", err);
-		calldata_set_string(&params, "err_msg", msg);
-		signal_handler_signal(obs_service_get_signal_handler(m_engine.agoraService), "onError", &params);
+//		struct calldata params;
+//		calldata_init(&params);
+//		calldata_set_int(&params, "err_code", err);
+//		calldata_set_string(&params, "err_msg", msg);
+//		signal_handler_signal(obs_service_get_signal_handler(m_engine.agoraService), "onError", &params);
 	}
 
     virtual void onUserJoined(uid_t uid, int elapsed) override
     {
-		struct calldata params;
-		calldata_init(&params);
-		calldata_set_int(&params, "uid", uid);
-		calldata_set_int(&params, "elapsed", elapsed);
-		signal_handler_signal(obs_service_get_signal_handler(m_engine.agoraService), "userJoined", &params);
+//		struct calldata params;
+//		calldata_init(&params);
+//		calldata_set_int(&params, "uid", uid);
+//		calldata_set_int(&params, "elapsed", elapsed);
+//		signal_handler_signal(obs_service_get_signal_handler(m_engine.agoraService), "userJoined", &params);
     }
     virtual void onUserOffline(uid_t uid, USER_OFFLINE_REASON_TYPE reason) override
     {
-		struct calldata params;
-		calldata_init(&params);
-		calldata_set_int(&params, "uid", uid);
-		calldata_set_int(&params, "reason", reason);
-		signal_handler_signal(obs_service_get_signal_handler(m_engine.agoraService), "userOffline", &params);
+//		struct calldata params;
+//		calldata_init(&params);
+//		calldata_set_int(&params, "uid", uid);
+//		calldata_set_int(&params, "reason", reason);
+//		signal_handler_signal(obs_service_get_signal_handler(m_engine.agoraService), "userOffline", &params);
     }
 
     virtual void onFirstLocalVideoFrame(int width, int height, int elapsed) override
@@ -77,14 +77,14 @@ public:
     }
     virtual void onFirstRemoteVideoDecoded(uid_t uid, int width, int height, int elapsed) override
 	{
-		struct calldata params;
+//		struct calldata params;
 
-		calldata_init(&params);
-		calldata_set_int(&params, "uid", uid);
-		calldata_set_int(&params, "width", width);
-		calldata_set_int(&params, "height", height);
-		calldata_set_int(&params, "elapsed", elapsed);
-		signal_handler_signal(obs_service_get_signal_handler(m_engine.agoraService), "firstRemoteVideoDecoded", &params);
+//		calldata_init(&params);
+//		calldata_set_int(&params, "uid", uid);
+//		calldata_set_int(&params, "width", width);
+//		calldata_set_int(&params, "height", height);
+//		calldata_set_int(&params, "elapsed", elapsed);
+//		signal_handler_signal(obs_service_get_signal_handler(m_engine.agoraService), "firstRemoteVideoDecoded", &params);
     }
     virtual void onFirstRemoteVideoFrame(uid_t uid, int width, int height, int elapsed) override
     {
@@ -222,12 +222,12 @@ void AgoraRtcEngine::AgoraVideoObserver_Destroy(void* data)
 	mediaEngine->release();
 }
 
-static void Cut_I420(uint8_t* Src, int x, int y, int srcWidth, int srcHeight, uint8_t* Dst, int desWidth, int desHeight)//Í¼Æ¬°´Î»ÖÃ²Ã¼ô    
+static void Cut_I420(uint8_t* Src, int x, int y, int srcWidth, int srcHeight, uint8_t* Dst, int desWidth, int desHeight)//å›¾ç‰‡æŒ‰ä½ç½®è£å‰ª    
 {
-	//µÃµ½BÍ¼ÏñËùÔÚAµÄ×ø±ê    
+	//å¾—åˆ°Bå›¾åƒæ‰€åœ¨Açš„åæ ‡    
 	int nIndex = 0;
-	int BPosX = x;//ÁĞ    
-	int BPosY = y;//ĞĞ    
+	int BPosX = x;//åˆ—    
+	int BPosY = y;//è¡Œ    
 	for (int i = 0; i < desHeight; i++)//    
 	{
 		memcpy(Dst + desWidth * i, Src + (srcWidth*BPosY) + BPosX + nIndex, desWidth);

@@ -6,7 +6,10 @@
 #include <string>
 #include "ExtendAudioFrameObserver.hpp"
 #include "ExtendVideoFrameObserver.hpp"
+#ifdef AGORA_DEMO
+#else
 #include "obs.h"
+#endif
 //#include "video_render_impl.h"
 
 class QQuickItem;
@@ -73,7 +76,7 @@ public:
 	int SetLiveTranscoding(const LiveTranscoding &transcoding);
 
 	int EnableWebSdkInteroperability(bool enabled);
-	//�豸
+	//设备
 	int getRecordingDeviceVolume();
 	int getPalyoutDeviceVolume();
 	int setRecordingDeviceVolume(int volume);
@@ -81,7 +84,7 @@ public:
 	int testMicrophone(bool start, int interval);
 	int testSpeaker(bool start);
 
-	obs_service_t* agoraService;
+//	obs_service_t* agoraService;
 	bool bInit = false;
 	int setupRemoteVideo(unsigned int uid, void* view);
     agora::rtc::IRtcEngine* getRtcEngine() {return m_rtcEngine.get();}
