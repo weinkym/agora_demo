@@ -35,8 +35,9 @@ win32{
 
 #    LIBS += -L$${C_DEPENDENCIES_PATH}/win32/bin -llibcurl -lavcodec -lavfilter -lavdevice -lavutil -lswscale -lavformat -lswresample -lfreetype
 
-    INCLUDEPATH +=$$PWD/include
+    INCLUDEPATH +=$$PWD/include/Agora
 }
+mac{
     LIBS += -lresolv
     LIBS += -F $$PWD/libs/mac
     LIBS += -framework  AgoraRtcEngineKit
@@ -57,7 +58,7 @@ win32{
     LIBS += -framework  VideoToolbox
     LIBS += -framework  SystemConfiguration
     INCLUDEPATH += $$PWD/libs/mac/AgoraRtcEngineKit.framework/Headers
-
+}
 #INCLUDEPATH +=$${C_OBS_ROOT}/deps/libff
 #INCLUDEPATH +=$${C_OBS_ROOT}/deps/libff/libff
 #INCLUDEPATH +=$$PWD/UI

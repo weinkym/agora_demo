@@ -4,6 +4,7 @@
 #include "clogsetting.h"
 #include "cparamutils.h"
 
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -34,8 +35,9 @@ void MainWindow::on_pushButton_clicked()
     agora_engine->enableLocalCameara(false);// stop agora camera capture
     agora_engine->enableLocalRender(false); // stop agora local render
     agora_engine->keepPreRotation(false);
+#ifdef Q_OS_MAC
     agora_engine->getRtcEngine()->setLogFile("/Users/miaozw/Movies/agora.log");
-
+#endif
     void* p = AgoraRtcEngine::GetInstance()->AgoraVideoObserver_Create();
     DC_LOG_INFO(p == NULL ?"F":"T");
 

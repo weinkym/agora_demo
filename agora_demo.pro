@@ -11,8 +11,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = agora_demo
 TEMPLATE = app
 
-include($$PWD/agora/agora.pri)
-include($$PWD/lj_agora.pri)
+
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked as deprecated (the exact warnings
 # depend on your compiler). Please consult the documentation of the
@@ -63,3 +62,6 @@ HEADERS  += mainwindow.h \
     base/clogsetting.h
 
 FORMS    += mainwindow.ui
+
+include($$PWD/agora/agora.pri)
+include($$PWD/lj_agora.pri)

@@ -7,6 +7,12 @@
 #include "ljextendaudioframeobserver.h"
 #include "ljextendvideoframeobserver.h"
 
+#ifndef Q_OS_MAC
+#include <windows.h>
+#include <IAgoraRtcEngine2.h>
+#include <memory>
+#endif
+
 using namespace agora::rtc;
 
 class AgoraRtcEngine
