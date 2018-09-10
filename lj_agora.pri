@@ -1,19 +1,13 @@
 
-INCLUDEPATH += $$PWD/source
-INCLUDEPATH += $$PWD/source/base
-INCLUDEPATH += $$PWD/source/Agora
+INCLUDEPATH += $$PWD/src
 
-HEADERS += \
-    $$PWD/source/base/cparamutils.h \
-    $$PWD/source/Agora/agorartcengine.hpp \
-    $$PWD/source/Agora/CicleBuffer.hpp \
-    $$PWD/source/Agora/ExtendAudioFrameObserver.hpp \
-    $$PWD/source/Agora/ExtendVideoFrameObserver.hpp
-
-SOURCES += \
-    $$PWD/source/base/cparamutils.cpp \
-    $$PWD/source/Agora/agorartcengine.cpp \
-    $$PWD/source/Agora/CicleBuffer.cpp \
-    $$PWD/source/Agora/ExtendAudioFrameObserver.cpp \
-    $$PWD/source/Agora/ExtendVideoFrameObserver.cpp
-
+HEADERS += $$PWD/src/cparamutils.cpp \
+    $$PWD/src/agorartcengine.h \
+    $$PWD/src/ljextendaudioframeobserver.h \
+    $$PWD/src/agorartcengineevent.h \
+    $$PWD/src/ljextendvideoframeobserver.h
+SOURCES += $$PWD/src/cparamutils.cpp \
+    $$PWD/src/agorartcengine.cpp \
+    $$PWD/src/ljextendaudioframeobserver.cpp \
+    $$PWD/src/agorartcengineevent.cpp \
+    $$PWD/src/ljextendvideoframeobserver.cpp

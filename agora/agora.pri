@@ -4,10 +4,10 @@
 #
 #-------------------------------------------------
 #C_OBS_ROOT=$$_PRO_FILE_PWD_/../vendor/obs
-C_OBS_ROOT=$$PWD/../../vendor/obs
-message(C_OBS_ROOT$${C_OBS_ROOT})
+#C_OBS_ROOT=$$PWD/../../vendor/obs
+#message(C_OBS_ROOT$${C_OBS_ROOT})
 
-include(./LJ_ADAPTER/ljobsadapter.pri)
+#include(./LJ_ADAPTER/ljobsadapter.pri)
 
 C_RELEASE_DEBUG=debug
 INCLUDEPATH +=$${C_OBS_ROOT}/libobs
@@ -26,7 +26,7 @@ CONFIG(debug, debug|release) {
 }
 #DEFINES *= LJ_OBS
 
-C_LIB_PATH=$${C_OBS_ROOT}/$${PLATFORM_NAME}/lib/$${DEBUG_RELEASE_NAME}
+#C_LIB_PATH=$${C_OBS_ROOT}/$${PLATFORM_NAME}/lib/$${DEBUG_RELEASE_NAME}
 #C_LIB_PATH=$${C_OBS_ROOT}/$${PLATFORM_NAME}/lib/$${DEBUG_RELEASE_NAME}
 
 win32{
@@ -37,17 +37,26 @@ win32{
 
     INCLUDEPATH +=$$PWD/include
 }
-mac{
-#    message(C_LIB_PATH$${C_LIB_PATH})
-#    C_DEPENDENCIES_PATH=$${C_OBS_ROOT}/deps
-#    QMAKE_LFLAGS += -F /System/Library/Frameworks/CoreFoundation.framework
-#    LIBS += -framework AppKit
+    LIBS += -lresolv
+    LIBS += -F $$PWD/libs/mac
+    LIBS += -framework  AgoraRtcEngineKit
 
-#    LIBS += -L$${C_LIB_PATH} -lobs-frontend-api -lobs -lobsglad -lfile-updater -ljansson -llibff
-##    LIBS += -L$${C_LIB_PATH} -lobs-frontend-api -lobs -lobsglad -lfile-updater -ljansson
-#    LIBS += -lcurl -lobjc -lSystem -lc++
-#    LIBS += -L$${C_LIB_PATH} -lavcodec -lavfilter -lavdevice -lavutil -lswscale -lavformat -lswresample -lfreetype
-}
+    LIBS += -framework  CoreAudio
+    LIBS += -framework  CoreWLAN
+    LIBS += -framework  CoreMedia
+    LIBS += -framework  AudioToolbox
+    LIBS += -framework  AVFoundation
+    LIBS += -framework  Foundation
+    LIBS += -framework  AppKit
+    LIBS += -framework  CFNetwork
+    LIBS += -framework  CoreFoundation
+    LIBS += -framework  CoreGraphics
+    LIBS += -framework  CoreVideo
+    LIBS += -framework  IOKit
+    LIBS += -framework  OpenGL
+    LIBS += -framework  VideoToolbox
+    LIBS += -framework  SystemConfiguration
+    INCLUDEPATH += $$PWD/libs/mac/AgoraRtcEngineKit.framework/Headers
 
 #INCLUDEPATH +=$${C_OBS_ROOT}/deps/libff
 #INCLUDEPATH +=$${C_OBS_ROOT}/deps/libff/libff

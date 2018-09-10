@@ -32,8 +32,8 @@ OUTPUT_DIR=$$PWD/output
 mac {
     PLATFORM_NAME = mac
     QT += macextras
-    ICON = $${TARGET}.icns
-    QMAKE_INFO_PLIST = $${TARGET}.plist
+#    ICON = $${TARGET}.icns
+#    QMAKE_INFO_PLIST = $${TARGET}.plist
 }
 CONFIG(debug, debug|release){
     DESTDIR  = $$OUTPUT_DIR/debug/$$PLATFORM_NAME/32bit

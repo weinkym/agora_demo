@@ -1,6 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "agorartcengine.hpp"
+#include "agorartcengine.h"
 #include "clogsetting.h"
 #include "cparamutils.h"
 
@@ -34,8 +34,11 @@ void MainWindow::on_pushButton_clicked()
     agora_engine->enableLocalCameara(false);// stop agora camera capture
     agora_engine->enableLocalRender(false); // stop agora local render
     agora_engine->keepPreRotation(false);
+    agora_engine->getRtcEngine()->setLogFile("/Users/miaozw/Movies/agora.log");
 
-    AgoraRtcEngine::GetInstance()->AgoraVideoObserver_Create();
+    void* p = AgoraRtcEngine::GetInstance()->AgoraVideoObserver_Create();
+    DC_LOG_INFO(p == NULL ?"F":"T");
+
     AgoraRtcEngine::GetInstance()->AgoraAudioObserver_Create();
 
 
