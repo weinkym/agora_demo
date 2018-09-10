@@ -3,6 +3,7 @@
 //#include "obs.h"
 using namespace agora::rtc;
 using namespace agora;
+#include "dclog.h"
 
 class AgoraRtcEngineEvent : public agora::rtc::IRtcEngineEventHandler
 {
@@ -47,6 +48,8 @@ public:
 
 	virtual void onError(int err, const char* msg) override
 	{
+        DC_LOG_INFO_VALUE(err);
+        DC_LOG_INFO_VALUE(msg);
 //		struct calldata params;
 //		calldata_init(&params);
 //		calldata_set_int(&params, "err_code", err);

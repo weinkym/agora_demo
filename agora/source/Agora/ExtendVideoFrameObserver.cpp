@@ -2,12 +2,24 @@
 #include "ExtendVideoFrameObserver.hpp"
 #include <TCHAR.h>
 //#include <timeapi.h>
+#include "dclog.h"
+#include <QFile>
 
 CExtendVideoFrameObserver::CExtendVideoFrameObserver()
 {
+
 	m_lpImageBuffer = new BYTE[0x800000];
 
 	m_lpRenderBuffer = new BYTE[0x800000];
+
+    QFile file("E:\\TEST_DOCUMENT\\YUV\\1280_720.yuv");
+    if(file.open(QIODevice::ReadOnly))
+    {
+        QByteArray array =  file.readAll();
+        DC_LOG_INFO_VALUE(array.size());
+        memcpy(m_lpImageBuffer,array.data(),array.size());
+    }
+
 
 	m_RenderWidth = 0;
 	m_RenderHeight = 0;
@@ -25,7 +37,10 @@ CExtendVideoFrameObserver::~CExtendVideoFrameObserver()
 int timeinc = 0;
 bool CExtendVideoFrameObserver::onCaptureVideoFrame(VideoFrame& videoFrame)
 {
-	SIZE_T nBufferSize = 0x800000;
+    DC_LOG_FUNCTION;
+//    DC_LOG_INFO_VALUE(videoFrame.width);
+//    DC_LOG_INFO_VALUE(videoFrame.height);
+    SIZE_T nBufferSize = 0x800000;
 	int nUvLen = videoFrame.height * videoFrame.width / 4;
 	int nYLen = nUvLen * 4;
 

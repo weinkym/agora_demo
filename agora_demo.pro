@@ -25,6 +25,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 DEFINES *= AGORA_DEMO
 
+INCLUDEPATH += $$PWD/base
+
 OUTPUT_DIR=$$PWD/output
 mac {
     PLATFORM_NAME = mac
@@ -55,12 +57,17 @@ SOURCES += main.cpp\
     agora/source/Agora/agorartcengine.cpp \
     agora/source/Agora/CicleBuffer.cpp \
     agora/source/Agora/ExtendAudioFrameObserver.cpp \
-    agora/source/Agora/ExtendVideoFrameObserver.cpp
+    agora/source/Agora/ExtendVideoFrameObserver.cpp \
+    base/dclog.cpp \
+    base/cparamutils.cpp
 
 HEADERS  += mainwindow.h \
     agora/source/Agora/agorartcengine.hpp \
     agora/source/Agora/CicleBuffer.hpp \
     agora/source/Agora/ExtendAudioFrameObserver.hpp \
-    agora/source/Agora/ExtendVideoFrameObserver.hpp
+    agora/source/Agora/ExtendVideoFrameObserver.hpp \
+    base/dclog.h \
+    base/dclogcontentdefine.h \
+    base/cparamutils.h
 
 FORMS    += mainwindow.ui
