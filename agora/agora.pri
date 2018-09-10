@@ -53,4 +53,3 @@ mac{
 #INCLUDEPATH +=$${C_OBS_ROOT}/deps/libff/libff
 #INCLUDEPATH +=$$PWD/UI
 #INCLUDEPATH +=$$PWD/UI/obs-frontend-api
-

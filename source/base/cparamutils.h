@@ -2,7 +2,6 @@
 #define CPARAMUTILS_H
 #include <QString>
 
-
 class CParamUtils
 {
 public:

@@ -3,7 +3,7 @@
 //#include "obs.h"
 using namespace agora::rtc;
 using namespace agora;
-#include "dclog.h"
+#include "clogsetting.h"
 
 class AgoraRtcEngineEvent : public agora::rtc::IRtcEngineEventHandler
 {

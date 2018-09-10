@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "agorartcengine.hpp"
-#include "dclog.h"
+#include "clogsetting.h"
 #include "cparamutils.h"
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -36,6 +36,8 @@ void MainWindow::on_pushButton_clicked()
     agora_engine->keepPreRotation(false);
 
     AgoraRtcEngine::GetInstance()->AgoraVideoObserver_Create();
+    AgoraRtcEngine::GetInstance()->AgoraAudioObserver_Create();
+
 
 //    agora_engine->EnableWebSdkInteroperability(service_data->enableWebSdkInteroperability);
     agora_engine->setVideoProfileEx(1280,720, 20, 2400);

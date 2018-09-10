@@ -2,7 +2,7 @@
 #include "ExtendVideoFrameObserver.hpp"
 #include <TCHAR.h>
 //#include <timeapi.h>
-#include "dclog.h"
+#include "clogsetting.h"
 #include <QFile>
 
 CExtendVideoFrameObserver::CExtendVideoFrameObserver()
@@ -37,7 +37,7 @@ CExtendVideoFrameObserver::~CExtendVideoFrameObserver()
 int timeinc = 0;
 bool CExtendVideoFrameObserver::onCaptureVideoFrame(VideoFrame& videoFrame)
 {
-    DC_LOG_FUNCTION;
+//    DC_LOG_FUNCTION;
 //    DC_LOG_INFO_VALUE(videoFrame.width);
 //    DC_LOG_INFO_VALUE(videoFrame.height);
     SIZE_T nBufferSize = 0x800000;
