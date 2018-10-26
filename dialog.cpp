@@ -6,6 +6,7 @@
 Dialog::Dialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::Dialog)
+  ,gridLayout(NULL)
 {
     ui->setupUi(this);
 
@@ -20,7 +21,8 @@ Dialog::~Dialog()
 
 void Dialog::SetAgoraPublishLayout()
 {
-    int user_count = m_lstUid.size();
+//    int user_count = m_lstUid.size();
+    int user_count = m_agoraViewMap.size();
     if (user_count == 0 )
         return;
 
@@ -35,13 +37,13 @@ void Dialog::SetAgoraPublishLayout()
     config.videoFramerate = 15;
     config.videoBitrate = 1500;
     config.videoGop = 20;
-    config.userCount = m_lstUid.size();
+    config.userCount = user_count;
     config.watermark = nullptr;
     config.videoCodecProfile = VIDEO_CODEC_PROFILE_HIGH;
     config.transcodingUsers = new TranscodingUser[config.userCount];
     config.lowLatency = true;
     //config.backgroundColor = 0x262626;
-    auto iter = m_lstUid.begin();
+//    auto iter = m_lstUid.begin();
 
     int row = 1;
     int col = 1;
@@ -61,6 +63,8 @@ void Dialog::SetAgoraPublishLayout()
     int w = config.width / col;
     int h = config.height / row;
 
+    QMapIterator<uid_t,QWidget*>iter(m_agoraViewMap);
+
     int index = 0;
     for (int i = 0; i < row; ++i){
         for (int j = 0; j < col; ++j){
@@ -68,15 +72,22 @@ void Dialog::SetAgoraPublishLayout()
             if (index >= user_count){
                 break;
             }
+            if(!iter.hasNext())
+            {
+                break;
+            }
+            iter.next();
+            config.transcodingUsers[index].uid = iter.key();
+
             config.transcodingUsers[index].x = j*w;
             config.transcodingUsers[index].y = i*h;
             config.transcodingUsers[index].width  = w;
             config.transcodingUsers[index].height = h;
             config.transcodingUsers[index].zOrder = 1;
-            if (iter != m_lstUid.end()){
-                config.transcodingUsers[index].uid = *iter;
-                ++iter;
-            }
+//            if (iter != m_lstUid.end()){
+//                config.transcodingUsers[index].uid = *iter;
+//                ++iter;
+//            }
         }
 
         if (index >= user_count){
@@ -113,6 +124,8 @@ void Dialog::SetAgoraPublishLayout()
     {
         delete[] config.transcodingUsers;
     }
+
+    updateViewLayoutAgora();
 }
 
 void Dialog::on_pushButton_clicked()
@@ -139,13 +152,13 @@ void Dialog::on_pushButton_clicked()
 //#endif
 //    VideoCanvas canvas(v, RENDER_MODE_FIT, uid);
 
-    VideoCanvas vc;
-    vc.uid = 0;
-    vc.view = reinterpret_cast<agora::rtc::view_t>(ui->widget->winId());
-    vc.renderMode = RENDER_MODE_TYPE::RENDER_MODE_ADAPTIVE;
-    //cancel setVideoProfile bitrate since version 2.1.0
-    lpRtcEngine->setVideoProfile(VIDEO_PROFILE_LANDSCAPE_720P, false);
-    lpRtcEngine->setupLocalVideo(vc);
+//    VideoCanvas vc;
+//    vc.uid = 0;
+//    vc.view = reinterpret_cast<agora::rtc::view_t>(ui->widget->winId());
+//    vc.renderMode = RENDER_MODE_TYPE::RENDER_MODE_ADAPTIVE;
+//    //cancel setVideoProfile bitrate since version 2.1.0
+//    lpRtcEngine->setVideoProfile(VIDEO_PROFILE_LANDSCAPE_720P, false);
+//    lpRtcEngine->setupLocalVideo(vc);
     lpRtcEngine->startPreview();
 
     CAgoraObject::getInstance()->JoinChannel(0,123666);
@@ -198,7 +211,7 @@ void Dialog::onUserOffline(uid_t uid, int reason)
         m_agoraViewMap.remove(uid);
         widget->deleteLater();
 
-        m_lstUid.remove(uid);
+//        m_lstUid.remove(uid);
         SetAgoraPublishLayout();
     }
 
@@ -222,11 +235,75 @@ void Dialog::doAppenUid(uid_t uid)
 //#else
 //    agora::rtc::view_t v = reinterpret_cast<agora::rtc::view_t>(view);
 //#endif
-    VideoCanvas canvas(reinterpret_cast<agora::rtc::view_t>(widget->winId()), RENDER_MODE_FIT, uid);
-    IRtcEngine *lpRtcEngine = CAgoraObject::getInstance()->m_lpAgoraEngine;
-    int res = lpRtcEngine->setupRemoteVideo(canvas);
-    DC_LOG_INFO_VALUE(res);
 
-    m_lstUid.emplace_back(uid);
+    if(uid == 123666)
+    {
+//        VideoCanvas canvas(reinterpret_cast<agora::rtc::view_t>(widget->winId()), RENDER_MODE_ADAPTIVE, uid);
+//        IRtcEngine *lpRtcEngine = CAgoraObject::getInstance()->m_lpAgoraEngine;
+//        int res = lpRtcEngine->setupLocalVideo(canvas);
+//        DC_LOG_INFO_VALUE(res);
+    }
+    else
+    {
+        VideoCanvas canvas(reinterpret_cast<agora::rtc::view_t>(widget->winId()),RENDER_MODE_FIT, uid);
+        IRtcEngine *lpRtcEngine = CAgoraObject::getInstance()->m_lpAgoraEngine;
+        int res = lpRtcEngine->setupRemoteVideo(canvas);
+        DC_LOG_INFO_VALUE(res);
+    }
+
+
+//    m_lstUid.emplace_back(uid);
+
     SetAgoraPublishLayout();
+}
+
+void Dialog::updateViewLayoutAgora()
+{
+    if(gridLayout)
+    {
+        gridLayout->deleteLater();
+        gridLayout = NULL;
+    }
+    gridLayout = new QGridLayout;
+    gridLayout->setSpacing(0);
+    gridLayout->setSizeConstraint(QLayout::SetDefaultConstraint);
+    ui->hLayout->addLayout(gridLayout);
+
+    int viewCount = m_agoraViewMap.count();
+    QMapIterator<uid_t,QWidget*>iter(m_agoraViewMap);
+
+    int col_number = 1;
+    if (viewCount >= 1 && viewCount <= 4)
+    {
+        col_number = 2;
+    }
+    else if (viewCount >= 5 && viewCount <= 9)
+    {
+        col_number = 3;
+    }
+    else
+    {
+        col_number = 4;
+
+    }
+
+
+
+    int index = 0;
+    while(iter.hasNext())
+    {
+        iter.next();
+        int row, col;
+        row = index / col_number;
+        col = index % col_number;
+
+        qDebug() << "current row = " << row << " col = " << col;
+        gridLayout->addWidget(iter.value(), row, col, 1, 1);
+        gridLayout->setRowStretch(row, 1);
+        gridLayout->setColumnStretch(col, 1);
+
+
+        index++;
+    }
+
 }

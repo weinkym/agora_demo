@@ -3,6 +3,8 @@
 
 #include <QDialog>
 #include <QMap>
+#include <QGridLayout>
+
 
 #include "cagoraobject.h"
 
@@ -32,9 +34,11 @@ private slots:
 
 private:
     void doAppenUid(uid_t uid);
+    void updateViewLayoutAgora();
 
 private:
     Ui::Dialog *ui;
+    QGridLayout *gridLayout;
     std::list<unsigned int> m_lstUid;
     QMap<uid_t,QWidget*> m_agoraViewMap;
 };
