@@ -51,17 +51,22 @@ CONFIG(release, debug|release){
 
 INCLUDEPATH += agora/source
 INCLUDEPATH += agora/source/Agora
+INCLUDEPATH += $$PWD/new
 
 SOURCES += main.cpp\
-        mainwindow.cpp \
-    base/dclog.cpp
+    base/dclog.cpp \
+    dialog.cpp \
+    cagoraobject.cpp \
+    cagoraeventhandler.cpp
 
-HEADERS  += mainwindow.h \
-    base/dclog.h \
+HEADERS  += base/dclog.h \
     base/dclogcontentdefine.h \
-    base/clogsetting.h
+    base/clogsetting.h \
+    dialog.h \
+    cagoraobject.h \
+    cagoraeventhandler.h
 
-FORMS    += mainwindow.ui
+FORMS    += dialog.ui
 
 include($$PWD/agora/agora.pri)
-include($$PWD/lj_agora.pri)
+#include($$PWD/lj_agora.pri)

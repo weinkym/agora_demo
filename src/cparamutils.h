@@ -7,6 +7,7 @@ class CParamUtils
 public:
     static QString getChannelName();
     static uint getUserId();
+    static QString getRTMPUrl();
 };
 
 #endif // CPARAMUTILS_H

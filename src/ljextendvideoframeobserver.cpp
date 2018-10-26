@@ -40,9 +40,9 @@ LJExtendVideoFrameObserver::~LJExtendVideoFrameObserver()
 int timeinc = 0;
 bool LJExtendVideoFrameObserver::onCaptureVideoFrame(VideoFrame& videoFrame)
 {
-    DC_LOG_FUNCTION;
-    DC_LOG_INFO_VALUE(videoFrame.width);
-    DC_LOG_INFO_VALUE(videoFrame.height);
+//    DC_LOG_FUNCTION;
+//    DC_LOG_INFO_VALUE(videoFrame.width);
+//    DC_LOG_INFO_VALUE(videoFrame.height);
     uint64_t nBufferSize = 0x800000;
     int nUvLen = videoFrame.height * videoFrame.width / 4;
     int nYLen = nUvLen * 4;

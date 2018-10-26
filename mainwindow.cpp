@@ -28,6 +28,7 @@ void MainWindow::on_pushButton_clicked()
         return;
     }
 
+    int res = 0;
     AgoraRtcEngine* agora_engine = AgoraRtcEngine::GetInstance();
     agora_engine->enableVideo(true);
     agora_engine->setChannelProfile(agora::rtc::CHANNEL_PROFILE_LIVE_BROADCASTING);
@@ -48,6 +49,46 @@ void MainWindow::on_pushButton_clicked()
     agora_engine->setVideoProfileEx(1280,720, 20, 2400);
     agora_engine->setAudioProfile(44100, 2, 1024 * 4);//agora_pcm_encoder
 
-    int res = agora_engine->joinChannel("",CParamUtils::getChannelName().toLatin1().data(),CParamUtils::getUserId());
+
+
+    res = agora_engine->joinChannel("",CParamUtils::getChannelName().toLatin1().data(),CParamUtils::getUserId());
     DC_LOG_INFO_VALUE(res);
+
+
+//    添加推流地址
+//            m_rtcEngine->addPublishStreamUrl(url, true);
+
+
+    res = agora_engine->AddPublishStreamUrl(CParamUtils::getRTMPUrl().toLatin1().data(),true);
+   DC_LOG_INFO_VALUE(res);
+
+
+   //CDN 转码设置
+   LiveTranscoding config;
+   config.audioSampleRate = AUDIO_SAMPLE_RATE_44100;
+   config.audioChannels = 2;
+   //config.audioBitrate
+   config.width = 1280;
+   config.height = 720;
+   config.videoFramerate = 30;
+   config.userCount = 1;  //如果 userCount > 1，则需要为每个 transcodingUsers 分别设置布局
+   config.videoCodecProfile = VIDEO_CODEC_PROFILE_HIGH;
+
+   //分配用户视窗的合图布局
+   config.transcodingUsers = new TranscodingUser[config.userCount];
+   config.transcodingUsers[0].uid = CParamUtils::getUserId(); //uid 应和 joinChannel() 输入的 uid 保持一致
+   config.transcodingUsers[0].x = 0;
+   config.transcodingUsers[0].audioChannel = 2;
+   config.transcodingUsers[0].y = 0;
+   config.transcodingUsers[0].width = config.width / 2;
+   config.transcodingUsers[0].height = config.height;
+
+   agora_engine->SetLiveTranscoding(config);
+
+     if (config.transcodingUsers)
+       {
+          delete[] config.transcodingUsers;
+       }
+
+
 }
