@@ -148,7 +148,7 @@ void Dialog::on_pushButton_clicked()
     lpRtcEngine->setupLocalVideo(vc);
     lpRtcEngine->startPreview();
 
-    CAgoraObject::getInstance()->JoinChannel(0,0);
+    CAgoraObject::getInstance()->JoinChannel(0,123666);
 //    bool transcodingEnabled = false;
     bool transcodingEnabled = true;
     int ret = lpRtcEngine->addPublishStreamUrl("rtmp://push-test.yunxuetang.com.cn/app90/4f03d5dd6c984bd2b105490faa8955c4", transcodingEnabled);
@@ -168,8 +168,10 @@ void Dialog::onJoinChannelSuccess(const char *channel, uid_t uid, int elapsed)
     DC_LOG_INFO_VALUE(channel);
     DC_LOG_INFO_VALUE(uid);
     DC_LOG_INFO_VALUE(elapsed);
-    m_lstUid.emplace_back(uid);
-    SetAgoraPublishLayout();
+//    m_lstUid.emplace_back(uid);
+//    SetAgoraPublishLayout();
+    doAppenUid(uid);
+
 }
 
 void Dialog::onFirstRemoteVideoDecoded(uid_t uid, int width, int height, int elapsed)
@@ -179,8 +181,9 @@ void Dialog::onFirstRemoteVideoDecoded(uid_t uid, int width, int height, int ela
     DC_LOG_INFO_VALUE(uid);
     DC_LOG_INFO_VALUE(width);
 
-    m_lstUid.emplace_back(uid);
-    SetAgoraPublishLayout();
+//    m_lstUid.emplace_back(uid);
+//    SetAgoraPublishLayout();
+    doAppenUid(uid);
 }
 
 void Dialog::onUserOffline(uid_t uid, int reason)
@@ -189,6 +192,41 @@ void Dialog::onUserOffline(uid_t uid, int reason)
     DC_LOG_INFO_VALUE(reason);
     DC_LOG_INFO_VALUE(uid);
 
-    m_lstUid.remove(uid);
+    if(m_agoraViewMap.contains(uid))
+    {
+        QWidget *widget = m_agoraViewMap.value(uid);
+        m_agoraViewMap.remove(uid);
+        widget->deleteLater();
+
+        m_lstUid.remove(uid);
+        SetAgoraPublishLayout();
+    }
+
+}
+
+void Dialog::doAppenUid(uid_t uid)
+{
+    if(m_agoraViewMap.contains(uid))
+    {
+        return;
+    }
+    QWidget *widget = new QWidget;
+    widget->setSizePolicy(QSizePolicy::Expanding,
+                QSizePolicy::Expanding);
+
+    m_agoraViewMap.insert(uid,widget);
+
+
+//#ifdef Q_OS_MAC
+//    view_t v = reinterpret_cast<view_t>(view);
+//#else
+//    agora::rtc::view_t v = reinterpret_cast<agora::rtc::view_t>(view);
+//#endif
+    VideoCanvas canvas(reinterpret_cast<agora::rtc::view_t>(widget->winId()), RENDER_MODE_FIT, uid);
+    IRtcEngine *lpRtcEngine = CAgoraObject::getInstance()->m_lpAgoraEngine;
+    int res = lpRtcEngine->setupRemoteVideo(canvas);
+    DC_LOG_INFO_VALUE(res);
+
+    m_lstUid.emplace_back(uid);
     SetAgoraPublishLayout();
 }

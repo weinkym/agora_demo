@@ -2,6 +2,8 @@
 #define DIALOG_H
 
 #include <QDialog>
+#include <QMap>
+
 #include "cagoraobject.h"
 
 namespace Ui {
@@ -27,9 +29,14 @@ private slots:
     void onFirstRemoteVideoDecoded(uid_t uid, int width, int height, int elapsed);
     void onUserOffline(uid_t uid, int reason);
 
+
+private:
+    void doAppenUid(uid_t uid);
+
 private:
     Ui::Dialog *ui;
     std::list<unsigned int> m_lstUid;
+    QMap<uid_t,QWidget*> m_agoraViewMap;
 };
 
 #endif // DIALOG_H
