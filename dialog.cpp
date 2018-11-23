@@ -2,7 +2,13 @@
 #include "ui_dialog.h"
 #include "cagoraobject.h"
 #include "dclog.h"
-
+#include "cparamutils.h"
+#ifdef Q_OS_MAC
+#include "AgoraBase.h"
+#include "cagorawidget.h"
+#include <QPainter>
+#include <QPaintEvent>
+#endif
 Dialog::Dialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::Dialog)
@@ -10,17 +16,25 @@ Dialog::Dialog(QWidget *parent) :
 {
     ui->setupUi(this);
 
+//    this->setStyleSheet("background: #00000000;");
+//    this->setAttribute(Qt::WA_TranslucentBackground);
 
+//    this->setStyleSheet("background: #00000000;");
+//    ui->widget->setAttribute(Qt::WA_TranslucentBackground,false);
+
+
+    CAgoraObject::getInstance();
 }
 
 Dialog::~Dialog()
 {
-    CAgoraObject::getInstance()->LeaveCahnnel();
+    on_pushButton_2_clicked();
     delete ui;
 }
 
 void Dialog::SetAgoraPublishLayout()
 {
+    return updateViewLayoutAgora();
 //    int user_count = m_lstUid.size();
     int user_count = m_agoraViewMap.size();
     if (user_count == 0 )
@@ -128,6 +142,15 @@ void Dialog::SetAgoraPublishLayout()
     updateViewLayoutAgora();
 }
 
+void Dialog::paintEvent(QPaintEvent *event)
+{
+//    QPainter painter(this);
+//    QBrush brush(QColor("#80000080"));
+//    painter.setBrush(brush);
+//    painter.drawRect(event->rect());
+//    painter.drawLine(event->rect().topLeft(),event->rect().bottomRight());
+}
+
 void Dialog::on_pushButton_clicked()
 {
 //    CString strChannelName("lj2018");
@@ -140,39 +163,25 @@ void Dialog::on_pushButton_clicked()
             this,SLOT(onUserOffline(uid_t,int))) ;
     IRtcEngine *lpRtcEngine = CAgoraObject::getInstance()->m_lpAgoraEngine;
 
-    //m_lpAgoraObject->SetLogFilePath(NULL);
-    //m_lpAgoraObject->SetMsgHandlerWnd(GetSafeHwnd());
-    lpRtcEngine->setChannelProfile(CHANNEL_PROFILE_LIVE_BROADCASTING);
     lpRtcEngine->enableVideo();
-    lpRtcEngine->setClientRole(CLIENT_ROLE_BROADCASTER);
-
-
-
-//    agora::rtc::view_t v = reinterpret_cast<agora::rtc::view_t>(view);
-//#endif
-//    VideoCanvas canvas(v, RENDER_MODE_FIT, uid);
-
-//    VideoCanvas vc;
-//    vc.uid = 0;
-//    vc.view = reinterpret_cast<agora::rtc::view_t>(ui->widget->winId());
-//    vc.renderMode = RENDER_MODE_TYPE::RENDER_MODE_ADAPTIVE;
-//    //cancel setVideoProfile bitrate since version 2.1.0
-//    lpRtcEngine->setVideoProfile(VIDEO_PROFILE_LANDSCAPE_720P, false);
-//    lpRtcEngine->setupLocalVideo(vc);
+    lpRtcEngine->setChannelProfile(agora::rtc::CHANNEL_PROFILE_LIVE_BROADCASTING);
+    lpRtcEngine->setClientRole(agora::rtc::CLIENT_ROLE_BROADCASTER);
+////        agora_engine->setClientRole(agora::rtc::CLIENT_ROLE_AUDIENCE);
+    m_lpAgoraObject->enableLocalCameara(true);// stop agora camera capture
+    m_lpAgoraObject->enableLocalRender(true); // stop agora local render
+    lpRtcEngine->enableLocalVideo(true);
+    lpRtcEngine->disableAudio();
+    lpRtcEngine->setVideoProfile(VIDEO_PROFILE_LANDSCAPE_720P, false);
     lpRtcEngine->startPreview();
-
-    CAgoraObject::getInstance()->JoinChannel(0,123666);
-//    bool transcodingEnabled = false;
-    bool transcodingEnabled = true;
-    int ret = lpRtcEngine->addPublishStreamUrl("rtmp://push-test.yunxuetang.com.cn/app90/4f03d5dd6c984bd2b105490faa8955c4", transcodingEnabled);
-    DC_LOG_INFO_VALUE(ret);
+    CAgoraObject::getInstance()->JoinChannel(CParamUtils::getChannelName().toLatin1(),CParamUtils::getUserId());
 }
 
 void Dialog::on_pushButton_2_clicked()
 {
     IRtcEngine *lpRtcEngine = CAgoraObject::getInstance()->m_lpAgoraEngine;
-    lpRtcEngine->removePublishStreamUrl("rtmp://push-test.yunxuetang.com.cn/app90/4f03d5dd6c984bd2b105490faa8955c4");
+//    lpRtcEngine->removePublishStreamUrl("rtmp://push-test.yunxuetang.com.cn/app90/4f03d5dd6c984bd2b105490faa8955c4");
     CAgoraObject::getInstance()->LeaveCahnnel();
+    lpRtcEngine->stopPreview();
 }
 
 void Dialog::onJoinChannelSuccess(const char *channel, uid_t uid, int elapsed)
@@ -181,10 +190,7 @@ void Dialog::onJoinChannelSuccess(const char *channel, uid_t uid, int elapsed)
     DC_LOG_INFO_VALUE(channel);
     DC_LOG_INFO_VALUE(uid);
     DC_LOG_INFO_VALUE(elapsed);
-//    m_lstUid.emplace_back(uid);
-//    SetAgoraPublishLayout();
     doAppenUid(uid);
-
 }
 
 void Dialog::onFirstRemoteVideoDecoded(uid_t uid, int width, int height, int elapsed)
@@ -210,8 +216,6 @@ void Dialog::onUserOffline(uid_t uid, int reason)
         QWidget *widget = m_agoraViewMap.value(uid);
         m_agoraViewMap.remove(uid);
         widget->deleteLater();
-
-//        m_lstUid.remove(uid);
         SetAgoraPublishLayout();
     }
 
@@ -223,36 +227,57 @@ void Dialog::doAppenUid(uid_t uid)
     {
         return;
     }
-    QWidget *widget = new QWidget;
-    widget->setSizePolicy(QSizePolicy::Expanding,
-                QSizePolicy::Expanding);
+    if(uid == CParamUtils::getUserId())
+    {
+        return;
+    }
+
+
+    {
+//        CAgoraWidget obj;
+//        QWidget *widget = obj.m_widget;
+//        widget
+//        widget->setStyleSheet("background: #80000080;");
+//        加了tool 貌似lineedit无法正常输入，需要tab切换窗口后正常 mac
+//                this->setAttribute(Qt::WA_TranslucentBackground);
+//        widget->show();
+    }
+
+    CAgoraWidget obj;
+    QWidget *widget = obj.m_widget;
+//    widget->setSizePolicy(QSizePolicy::Expanding,
+//                QSizePolicy::Expanding);
 
     m_agoraViewMap.insert(uid,widget);
 
+    DC_LOG_INFO_VALUE(uid);
+    DC_LOG_INFO_VALUE(CParamUtils::getUserId());
+#ifdef Q_OS_WIN
+        VideoCanvas canvas(reinterpret_cast<agora::rtc::view_t>(obj.m_id),RENDER_MODE_FIT, uid);
+#else
+        VideoCanvas canvas(reinterpret_cast<agora::view_t>(obj.m_id),RENDER_MODE_FIT, uid);
+#endif
 
-//#ifdef Q_OS_MAC
-//    view_t v = reinterpret_cast<view_t>(view);
-//#else
-//    agora::rtc::view_t v = reinterpret_cast<agora::rtc::view_t>(view);
-//#endif
-
-    if(uid == 123666)
+        IRtcEngine *lpRtcEngine = CAgoraObject::getInstance()->m_lpAgoraEngine;
+    if(uid == CParamUtils::getUserId())
     {
-//        VideoCanvas canvas(reinterpret_cast<agora::rtc::view_t>(widget->winId()), RENDER_MODE_ADAPTIVE, uid);
-//        IRtcEngine *lpRtcEngine = CAgoraObject::getInstance()->m_lpAgoraEngine;
-//        int res = lpRtcEngine->setupLocalVideo(canvas);
-//        DC_LOG_INFO_VALUE(res);
+        int res = lpRtcEngine->setupLocalVideo(canvas);
+        DC_LOG_INFO_VALUE(res);
     }
     else
     {
-        VideoCanvas canvas(reinterpret_cast<agora::rtc::view_t>(widget->winId()),RENDER_MODE_FIT, uid);
-        IRtcEngine *lpRtcEngine = CAgoraObject::getInstance()->m_lpAgoraEngine;
         int res = lpRtcEngine->setupRemoteVideo(canvas);
         DC_LOG_INFO_VALUE(res);
     }
 
-
-//    m_lstUid.emplace_back(uid);
+//    {
+//        CAgoraWidget obj;
+//        QWidget *widget = obj.m_widget;
+//        VideoCanvas canvas(reinterpret_cast<agora::view_t>(obj.m_id),RENDER_MODE_FIT, uid);
+//        int res = lpRtcEngine->setupRemoteVideo(canvas);
+//        DC_LOG_INFO_VALUE(res);
+//        widget->show();
+//    }
 
     SetAgoraPublishLayout();
 }
@@ -301,6 +326,8 @@ void Dialog::updateViewLayoutAgora()
         gridLayout->addWidget(iter.value(), row, col, 1, 1);
         gridLayout->setRowStretch(row, 1);
         gridLayout->setColumnStretch(col, 1);
+
+
 
 
         index++;

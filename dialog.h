@@ -22,6 +22,10 @@ public:
 
     void SetAgoraPublishLayout();
 
+
+protected:
+    void paintEvent(QPaintEvent *event);
+
 private slots:
     void on_pushButton_clicked();
 

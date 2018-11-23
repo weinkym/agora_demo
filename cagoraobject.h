@@ -15,8 +15,10 @@ public:
     ~CAgoraObject();
     static CAgoraObject *getInstance();
 
-    BOOL JoinChannel(LPCTSTR lpChannelName, UINT nUID = 0, LPCSTR lpDynamicKey = NULL);
-    BOOL LeaveCahnnel();
+    bool JoinChannel(const char* lpChannelName, uint nUID = 0, const char*  lpDynamicKey = NULL);
+    bool LeaveCahnnel();
+    bool  enableLocalCameara(bool bEnable);
+    bool enableLocalRender(bool bEnable);
 
 public:
     static CAgoraObject* m_instance;

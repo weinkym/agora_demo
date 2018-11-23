@@ -3,8 +3,8 @@
 
 QString CParamUtils::getChannelName()
 {
-    return "lj2018";
-//    return "lj";
+//    return "lj2018";
+    return "lj";
 }
 
 uint CParamUtils::getUserId()
@@ -15,5 +15,5 @@ uint CParamUtils::getUserId()
 
 QString CParamUtils::getRTMPUrl()
 {
-    return "rtmp://push-test.yunxuetang.com.cn/app90/4f03d5dd6c984bd2b105490faa8955c4";
+    return "rtmp://push-test.yunxuetang.com.cn/app90/98ebd61788174fc48a3663b5af7920f1";
 }

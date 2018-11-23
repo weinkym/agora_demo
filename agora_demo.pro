@@ -31,8 +31,9 @@ OUTPUT_DIR=$$PWD/output
 mac {
     PLATFORM_NAME = mac
     QT += macextras
-#    ICON = $${TARGET}.icns
-#    QMAKE_INFO_PLIST = $${TARGET}.plist
+    QMAKE_LFLAGS += -framework AppKit
+    QMAKE_LFLAGS += -framework Carbon
+
 }
 CONFIG(debug, debug|release){
     DESTDIR  = $$OUTPUT_DIR/debug/$$PLATFORM_NAME/32bit
@@ -58,7 +59,10 @@ SOURCES += main.cpp\
     dialog.cpp \
     cagoraobject.cpp \
     cagoraeventhandler.cpp \
-    base/cparamutils.cpp
+    base/cparamutils.cpp \
+    base/cagorawidget.cpp \
+    base/cagorawidget_mac.mm \
+    base/cljagoralable.cpp
 
 HEADERS  += base/dclog.h \
     base/dclogcontentdefine.h \
@@ -66,7 +70,9 @@ HEADERS  += base/dclog.h \
     dialog.h \
     cagoraobject.h \
     cagoraeventhandler.h \
-    base/cparamutils.h
+    base/cparamutils.h \
+    base/cagorawidget.h \
+    base/cljagoralable.h
 
 FORMS    += dialog.ui
 

@@ -33,35 +33,56 @@ CAgoraObject *CAgoraObject::getInstance()
     return m_instance;
 }
 
-BOOL CAgoraObject::JoinChannel(LPCTSTR lpChannelName, UINT nUID, LPCSTR lpDynamicKey)
+bool CAgoraObject::JoinChannel(const char*  lpChannelName, uint nUID, const char*  lpDynamicKey)
 {
     int nRet = 0;
-
-    LPCSTR lpStreamInfo = "{\"owner\":true,\"width\":640,\"height\":480,\"bitrate\":500}";
-//#ifdef UNICODE
-//    CHAR szChannelName[128];
-
-//    ::WideCharToMultiByte(CP_ACP, 0, lpChannelName, -1, szChannelName, 128, NULL, NULL);
-//    nRet = m_lpAgoraEngine->joinChannel(lpDynamicKey, szChannelName, lpStreamInfo, nUID);
-//#else
-//    nRet = m_lpAgoraEngine->joinChannel(lpDynamicKey, lpChannelName, lpStreamInfo, nUID);
-//#endif
-
-    nRet = m_lpAgoraEngine->joinChannel(lpDynamicKey, "lj2018", lpStreamInfo, nUID);
+    nRet = m_lpAgoraEngine->joinChannel(lpDynamicKey, lpChannelName, 0, nUID);
 
     DC_LOG_INFO_VALUE(nRet);
-//    if (nRet == 0)
-//        m_strChannelName = lpChannelName;
-
-    return nRet == 0 ? TRUE : FALSE;
+    return nRet == 0 ? true : false;
 }
 
-BOOL CAgoraObject::LeaveCahnnel()
+bool CAgoraObject::LeaveCahnnel()
 {
     m_lpAgoraEngine->stopPreview();
     int nRet = m_lpAgoraEngine->leaveChannel();
 
     //	m_nSelfUID = 0;
 
-    return nRet == 0 ? TRUE : FALSE;
+    return nRet == 0 ? true : false;
+}
+
+bool CAgoraObject::enableLocalCameara(bool bEnable)
+{
+#ifdef Q_OS_MAC
+    agora::base::AParameter apm(m_lpAgoraEngine);
+#else
+    AParameter apm(*m_lpAgoraEngine.get());
+#endif
+    int ret = -1;
+    if (!apm.get()) return false;
+
+    if (!bEnable)
+        ret = apm->setParameters("{\"che.video.local.camera_index\":1024}");
+    else
+        ret = apm->setParameters("{\"che.video.local.camera_index\":0}");
+
+    apm.release();
+    return ret == 0;
+}
+
+bool CAgoraObject::enableLocalRender(bool bEnable)
+{
+    int ret = -1;
+#ifdef Q_OS_MAC
+    agora::base::AParameter apm(m_lpAgoraEngine);
+#else
+    AParameter apm(m_lpAgoraEngine);
+#endif
+    if (bEnable)
+        ret = apm->setParameters("{\"che.video.local.render\":true}");
+    else
+        ret = apm->setParameters("{\"che.video.local.render\":false}");
+    apm.release();
+    return ret == 0 ? true : false;
 }
